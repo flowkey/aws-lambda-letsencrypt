@@ -3,7 +3,7 @@ from certbot import main as app
 
 
 def handler(event, context):
-    domains = os.getenv('DOMAINS')
+    domains = ','.join(os.getenv('DOMAINS').split())
     email = os.getenv('EMAIL')
     distribution_id = os.getenv('DISTRIBUTION_ID')
     workdir = os.getenv('WORKDIR') or '/tmp/letsencrypt'
