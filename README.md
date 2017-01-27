@@ -38,7 +38,7 @@ docker run -e AWS_ACCESS_KEY_ID='YOUR-ACCESS-KEY-FOR-S3' -e AWS_SECRET_ACCESS_KE
 You can setup your Lambda function by specifying the bundled zip. As aws-lambda-letsencrypt uses following environment variables, you need to add them on Lambda configuration.
 
 * EMAIL - Your email
-* DOMAINS - comma-separated domain list
+* DOMAINS - space-separated domain list
 * DISTRIBUTION_ID - CloudFront distribution to update
 * TEST_MODE - specify '1' if you want to run `certbot --staging`
 
