@@ -16,3 +16,7 @@ rm -f ${OUTABS}
 zip -9 ${OUTABS} $(git ls-files | grep -F .py)
 pushd ${VENV}/lib/python3.7/site-packages && zip -r9 ${OUTABS} * && popd
 pushd ${VENV}/lib64/python3.7/site-packages && zip -r9 ${OUTABS} * && popd
+
+# workaround for libffi
+pushd ${VENV}/lib/python3.7/site-packages/.libs_cffi_backend && zip -r9 ${OUTABS} * && popd
+pushd ${VENV}/lib64/python3.7/site-packages/.libs_cffi_backend && zip -r9 ${OUTABS} * && popd

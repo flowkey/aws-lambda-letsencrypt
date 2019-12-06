@@ -1,3 +1,4 @@
 FROM amazonlinux:latest
-RUN yum install -y python3-pip git zip
+RUN yum -y groupinstall 'Development Tools'
+RUN yum -y install libffi-devel openssl-devel python3-pip
 CMD /src/package.sh
