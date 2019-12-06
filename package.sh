@@ -1,30 +1,18 @@
 #!/bin/bash
 
-BUILD_DIR=$HOME/build
-OUTFILE=${BUILD_DIR}/package.zip
-REMOTE_URL=https://github.com/kento1218/aws-lambda-letsencrypt.git
+OUTFILE=package.zip
+VENV=package
 
-sudo yum -y groupinstall 'Development Tools'
-sudo yum -y install libffi-devel openssl-devel
+cd $(dirname $0)
 
-[ -d ${BUILD_DIR} ] || mkdir ${BUILD_DIR}
-cd ${BUILD_DIR}
+OUTABS=$(cd $(dirname ${OUTFILE}) && pwd)/$(basename ${OUTFILE})
 
-[ -d src ] || git clone ${REMOTE_URL} src
+[ -f ${VENV}/bin/activate ] || python3 -m venv ${VENV}
+source ${VENV}/bin/activate
 
-[ -f bin/activate ] || virtualenv .
-source bin/activate
+pip3 install -r requirements.txt
 
-pip install certbot
-
-pushd src && python certbot_s3website/setup.py develop && popd
-
-rm -f ${OUTFILE}
-pushd src && zip -r9 ${OUTFILE} * && popd
-pushd $VIRTUAL_ENV/lib/python2.7/site-packages && zip -r9 ${OUTFILE} * && popd
-pushd $VIRTUAL_ENV/lib64/python2.7/site-packages && zip -r9 ${OUTFILE} * && popd
-
-GIT_VER=$(cd src && git describe --always)
-DATE=$(date '+%Y%m%d%H%M%S')
-
-aws s3 cp ${OUTFILE} s3://${BUCKET_NAME}/aws-lambda-letsencrypt-${GIT_VER}-${DATE}.zip
+rm -f ${OUTABS}
+zip -9 ${OUTABS} $(git ls-files | grep -F .py)
+pushd ${VENV}/lib/python3.7/site-packages && zip -r9 ${OUTABS} * && popd
+pushd ${VENV}/lib64/python3.7/site-packages && zip -r9 ${OUTABS} * && popd
